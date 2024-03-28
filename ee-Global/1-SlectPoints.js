@@ -2322,16 +2322,24 @@ var Reference = ee.FeatureCollection("projects/ee-pkyu1999/assets/mangrove/Globa
                 })]);
 
 
-var Reference = ee.FeatureCollection([agriculture, forest, grassland, shrubland, urban, water, paddyfield, bare]).flatten();
+var Reference = ee.FeatureCollection([mangrove, water, vegetation, plough, architecture, paddyfield, bare]).flatten();
 var ReferenceSample = Reference.map(function(feature) {
-    var sample = randomPoints({
+    var landcover_flag = feature.get('landcover');
+    var sample = ee.FeatureCollection.randomPoints({
         region: feature.geometry(),
         points: 100,
         seed: 0
     });
-    var sample = feature.
+    sample = sample.map(function(point) {
+        return point.set('landcover', landcover_flag);
+    });
     return sample;
 }).flatten();
+Export.table.toAsset({
+    collection: ReferenceSample,
+    description: 'samples',
+    assetId: 'samplePoints/GMD_v1',
+});
 
 var start = ee.Date.fromYMD(2020, 1, 1);
 var end = ee.Date.fromYMD(2020, 7, 1);
