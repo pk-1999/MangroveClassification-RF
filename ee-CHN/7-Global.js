@@ -107,8 +107,6 @@ var S2_imageList = yearList.map(function (year) {
 function normalize(image) {
     image = ee.Image(image);
     // S2辐射定标 DN->反射率
-    var opticalBands = image.select(['red', 'nir', 'swir1', 'swir2']).multiply(0.0001);
-    image = image.addBands(opticalBands, null, true);
     var RedBands = image.select(['red']).multiply(0.0003);
     var NIRBands = image.select(['nir']).multiply(0.00015);
     var SWIR1Bands = image.select('swir1').multiply(0.0002);
